@@ -4,6 +4,7 @@ gem "pg", '0.9.0'
 gem 'postgres-pr', '0.6.3'
 gem 'heroku'
 gem 'json'
+gem 'json_pure'
 
 group :development do
 	gem 'ruby-debug'
