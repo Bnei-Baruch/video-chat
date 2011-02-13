@@ -1,0 +1,26 @@
+<h1>New Session Generator</h1>
+<%= form_for @session, :url => admin_sessions_path(@session) do |f| %>
+    <fieldset>
+      <p>
+        <legend> Basic</legend>
+        <p><label>Title</label><%= f.text_field :session_title %></p>
+        <p><label>Description</label><%= f.text_area :description %></p>
+        <p><label>Location</label><%= f.text_field :location %> IP Address</p>
+      </ps>
+    </fieldset>
+    <fieldset>
+      <legend> Advanced</legend>
+      <p><label>Echo Suppression</label>
+      <%= f.radio_button :echo_suppression, 'true' %><label>Enable</label>
+      <%= f.radio_button :echo_suppression, 'false' %><label>Disable</label></p>
+      <p><label>Multiplexer</label>
+      <%= f.radio_button :multiplexer, 'true' %><label>Enable</label>
+      <%= f.radio_button :multiplexer, 'false' %><label>Disable</label></p>
+      <p><label>Output Streams</label><%= f.text_field :output_streams %></p>
+      <p><label>Switch Type</label>
+      <%= f.radio_button :switch_type, 0 %><label>timeout-based</label>
+      <%= f.radio_button :switch_type, 1 %><label>activity-based</label></p>
+      <p><label>Switch Timeout</label><%= f.text_field :switch_timeout %> msec</p>
+    </fieldset>
+    <p><%= f.submit 'Generate Session' %></p>
+<%- end %>

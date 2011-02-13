@@ -1,0 +1,7 @@
+<h1>Session Editor</h1>
+<%= form_for @session, :url => admin_session_path(@session, :method => :put) do |f| %>
+    <p><label>Title </label><%= f.text_field :session_title %></p>
+    <p><label>Description </label><%= f.text_area :description %></p>
+    <p><%= f.submit 'Rename Session' %></p>
+<%- end %>
+

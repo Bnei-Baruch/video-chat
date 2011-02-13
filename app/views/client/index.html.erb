@@ -1,0 +1,6 @@
+<h2>Available rooms</h2>
+<ul>
+  <%- @sessions.each do |sess| %>
+      <li><%= link_to sess.session_title, client_path(sess), :remote => true %></li>
+  <%- end %>
+</ul>

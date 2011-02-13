@@ -1,0 +1,262 @@
+<script type="text/javascript">
+    var apiKey = <%= @api_key %>;
+    var sessionId = '<%= @session.session_id %>';
+    var token = '<%= @token %>';
+
+    var session;
+    var publisher;
+
+    var PUBLISHER_WIDTH = 220;
+    var PUBLISHER_HEIGHT = 165;
+    var SUBSCRIBER_WIDTH = 220;
+    var SUBSCRIBER_HEIGHT = 165;
+
+    var basicStreams = {};
+    var multiplexedStreams = {};
+
+    // Un-comment either of the following to set automatic logging and exception handling.
+    // See the exceptionHandler() method below.
+    // TB.setLogLevel(TB.DEBUG);
+    // TB.addEventListener("exception", exceptionHandler);
+
+    if (TB.checkSystemRequirements() != TB.HAS_REQUIREMENTS) {
+        alert("Unable to run TokBox OpenTok in this browser.");
+    } else {
+        // Register the exception handler and
+        // create the local session object
+        session = TB.initSession(sessionId);
+
+        // Register event listeners
+        session.addEventListener("sessionConnected", sessionConnectedHandler);
+        session.addEventListener("streamCreated", streamCreatedHandler);
+        session.addEventListener("streamDestroyed", streamDestroyedHandler);
+
+        // Connect to the session
+        session.connect(apiKey, token);
+    }
+
+    //--------------------------------------
+    //  OPENTOK EVENT HANDLERS
+    //--------------------------------------
+
+    function sessionConnectedHandler(event) {
+        for (var i = 0; i < event.streams.length; i++) {
+            // Subscribe to all multiplexed streams
+            if (event.streams[i].type == "multiplexed") {
+                subscribeToStream(event.streams[i]);
+                multiplexedStreams[event.streams[i].streamId] = event.streams[i];
+            } else if (event.streams[i].type == "basic") {
+                basicStreams[event.streams[i].streamId] = event.streams[i];
+            }
+        }
+
+        // Now possible to start publishing
+        document.getElementById('status').innerHTML = 'You can start publishing.';
+        show("startPublishing");
+    }
+
+    function streamCreatedHandler(event) {
+
+        // If we get a streamCreated event for our own connection
+        // then we must have just started publishing.
+        var justStartedPublishing = false;
+        for (var i = 0; i < event.streams.length; i++) {
+            var stream = event.streams[i];
+            if (stream.connection.connectionId == event.target.connection.connectionId
+                    && stream.type == "basic") {
+                justStartedPublishing = true;
+                break;
+            }
+        }
+
+        if (justStartedPublishing) {
+            // Our publisher just started streaming
+            for (var key in multiplexedStreams) {
+                if (multiplexedStreams[key].hasOwnProperty("streamId")) {
+                    unsubscribeFromStream(event.target, multiplexedStreams[key]);
+                }
+            }
+            for (key in basicStreams) {
+                if (basicStreams[key].hasOwnProperty("streamId")) {
+                    subscribeToStream(basicStreams[key]);
+                }
+            }
+        }
+
+        if (publisher) {
+            for (i = 0; i < event.streams.length; i++) {
+                // Subscribe to all additional basic streams but us
+                stream = event.streams[i];
+                if (stream.connection.connectionId != event.target.connection.connectionId
+                        && stream.type == "basic") {
+                    subscribeToStream(stream);
+                    basicStreams[stream.streamId] = event.streams[i];
+                } else if (stream.type == "multiplexed") {
+                    multiplexedStreams[stream.streamId] = event.streams[i];
+                }
+            }
+
+            if (justStartedPublishing) {
+                // Update status and controls
+                document.getElementById('status').innerHTML = 'You are publishing';
+                hide("startPublishing");
+                show("stopPublishing");
+            }
+
+        } else {
+
+            for (i = 0; i < event.streams.length; i++) {
+                // Subscribe to all additional multiplexed streams
+                stream = event.streams[i];
+                if (stream.type == "multiplexed") {
+                    subscribeToStream(event.streams[i]);
+                    multiplexedStreams[event.streams[i].streamId] = event.streams[i];
+                } else if (stream.type == "basic"
+                        && stream.connection.connectionId != event.target.connection.connectionId) {
+                    basicStreams[event.streams[i].streamId] = event.streams[i];
+                }
+            }
+        }
+    }
+
+    function streamDestroyedHandler(event) {
+
+        // If we get a streamDestroyed event for a stream coming from our own connection
+        // then we just stopped publishing, and we should switch back to watching multiplexed streams.
+
+        var justStoppedPublishing = false;
+        for (var i = 0; i < event.streams.length; i++) {
+            if (event.streams[i].connection.connectionId == event.target.connection.connectionId
+                    && event.streams[i].type == "basic") {
+                justStoppedPublishing = true;
+                break;
+            }
+        }
+
+        for (i = 0; i < event.streams.length; i++) {
+            unsubscribeFromStream(event.target, event.streams[i]);
+            if (event.streams[i].type == "basic") {
+                if (basicStreams.hasOwnProperty(event.streams[i].streamId))
+                    delete basicStreams[event.streams[i].streamId];
+            } else if (event.streams[i].type == "multiplexed") {
+                if (multiplexedStreams.hasOwnProperty(event.streams[i].streamId))
+                    delete multiplexedStreams[event.streams[i].streamId];
+            }
+        }
+
+        if (justStoppedPublishing) {
+            // Our publisher just stopped streaming
+
+            // Unsubscribe from all basic streams
+            for (var key in basicStreams) {
+                if (basicStreams[key].hasOwnProperty("streamId")) {
+                    unsubscribeFromStream(event.target, basicStreams[key]);
+                }
+            }
+            // Subscribe to all multiplexed streams
+            for (key in multiplexedStreams) {
+                if (multiplexedStreams[key].hasOwnProperty("streamId")) {
+                    subscribeToStream(multiplexedStreams[key]);
+                }
+            }
+
+            // Update status and controls
+            document.getElementById('status').innerHTML = 'You can start publishing';
+            show("startPublishing");
+        }
+    }
+
+    /*
+     If you un-comment the call to TB.setEventLister(), above, OpenTok
+     calls the exceptionHandler() method when exception events occur.
+     You can modify this method to further process exception events.
+     If you un-comment the call to TB.setLogLevel(), above, OpenTok
+     automatically displays exception event messages.
+     */
+    function exceptionHandler(event) {
+        alert("Exception: " + event.code + "::" + event.message);
+    }
+
+    //--------------------------------------
+    //  LINK CLICK HANDLERS
+    //--------------------------------------
+
+    // Called when user wants to start participating in the session
+    function startPublishing() {
+        // Starts publishing user local camera and mic
+        // as a stream into the session
+
+        // Create a div for the publisher to replace
+        var parentDiv = document.getElementById("myCamera");
+        var stubDiv = document.createElement("div");
+        stubDiv.id = "opentok_publisher";
+        parentDiv.appendChild(stubDiv);
+
+        publisherProps = {width: PUBLISHER_WIDTH,
+            height: PUBLISHER_HEIGHT,
+            microphoneEnabled: true,
+            name: "Basic stream"};
+        publisher = session.publish(stubDiv.id, publisherProps);
+
+        document.getElementById("status").innerHTML = "Initiating publishing...";
+        hide("startPublishing");
+    }
+
+    // Called when user wants to stop participating in the session
+    function stopPublishing() {
+        if (publisher) {
+            // Stop the stream
+            session.unpublish(publisher);
+            publisher = null;
+        }
+
+        document.getElementById("status").innerHTML = "Ceasing publishing...";
+        hide("stopPublishing");
+    }
+
+    //--------------------------------------
+    //  HELPER METHODS
+    //--------------------------------------
+
+    // Called to subscribe to a new stream
+    function subscribeToStream(stream) {
+        // Create a div for the subscriber to replace
+        var parentDiv = document.getElementById("subscribers");
+        var subscriberDiv = document.createElement("div");
+        subscriberDiv.id = "opentok_subscriber_" + stream.streamId;
+        parentDiv.appendChild(subscriberDiv);
+
+        subscriberProps = {width: SUBSCRIBER_WIDTH, height: SUBSCRIBER_HEIGHT};
+        session.subscribe(stream, subscriberDiv.id, subscriberProps);
+    }
+
+    // Called to unsubscribe from an existing stream
+    function unsubscribeFromStream(session, stream) {
+        var subscribers = session.getSubscribersForStream(stream);
+        for (var i = 0; i < subscribers.length; i++) {
+            session.unsubscribe(subscribers[i]);
+        }
+    }
+
+    function show(id) {
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function hide(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+</script>
+<h2>Multiplexed</h2>
+<div id="videobar">
+  <div id="localview">
+    <div id="status" class="smalltype">Connecting...</div>
+    <div id="myCamera" class="publisherContainer"></div>
+    <div id="action" class="smalltype">
+      <a href="#" onclick="javascript:startPublishing()" id="startPublishing">Start publishing</a>
+      <a href="#" onclick="javascript:stopPublishing()" id="stopPublishing">Stop publishing</a>
+    </div>
+  </div>
+  <div id="subscribers">
+  </div>
+</div>

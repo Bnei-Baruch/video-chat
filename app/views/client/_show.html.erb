@@ -1,0 +1,9 @@
+<h2>Chat room: <%= @session.session_title %></h2>
+<div><%= @session.description %></div>
+<%=
+    if @session.multiplexer
+        render :partial => 'multiplexor'
+    else
+        render :partial => 'regular'
+    end
+%>
