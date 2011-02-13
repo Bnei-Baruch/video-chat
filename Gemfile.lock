@@ -91,6 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   heroku
+  json
   pg (= 0.9.0)
   postgres-pr (= 0.6.3)
   rails (= 3.0.4)
