@@ -40,7 +40,6 @@
             $("#myCamera").before(html);
 
             var publisherProps = {
-                microphoneEnabled: false,
                 name: $("#name").val()
             };
             publisher = session.publish('opentok_publisher', publisherProps); 	// Pass the replacement div id to the publish method
