@@ -1,0 +1,75 @@
+#chat-rooms {
+    float      : left;
+    width      : 264px;
+    text-align : left;
+    border     : 1px solid black;
+    padding    : 10px;
+}
+
+#menu {
+    border        : 1px solid black;
+    margin-bottom : 20px;
+}
+
+#menu .h2 {
+    text-align : center;
+}
+
+#menu ul {
+    list-style : none outside none;
+    margin     : 0;
+    padding    : 10px;
+}
+
+#myName {
+    border        : 1px solid;
+    padding       : 5px 10px 10px;
+    margin-bottom : 20px;
+}
+
+#myName #name {
+    width : 220px;
+}
+
+#myCamera {
+    border : 1px solid;
+    height : 198px;
+    width  : 264px;
+}
+
+#chat-room {
+    padding-left : 300px;
+}
+#chat-room .h2{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+#chat-room .description{
+    margin:0 15px 10px;
+}
+#chat-room #links {
+    border: 1px solid black;
+    height: 1.5em;
+    padding: 0 10px;
+}
+#links a{
+    float:left;
+    margin-right: 10px;
+}
+#links #status{
+    float:right;
+    font-weight: bold;
+}
+
+#myCameras .item{
+    float: left;
+    margin-right: 2px;
+}
+.item .name{
+    height:1.4em;
+}
+
+.clear {
+    clear: both;
+}

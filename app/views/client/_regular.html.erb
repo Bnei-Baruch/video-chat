@@ -32,17 +32,32 @@
     //--------------------------------------
     //  LINK CLICK HANDLERS
     //--------------------------------------
+    function connect() {
+        session.connect(apiKey, token);
+    }
+
+    function disconnect() {
+        session.disconnect();
+        show('connectLink');
+        hide('disconnectLink');
+        <%- if @broadcaster -%>
+            hide('publishLink');
+            hide('unpublishLink');
+        <%- end -%>
+    }
     
+    <%- if @broadcaster -%>
     function publish() {
         if (!publisher) {
             var name = $("#name").val();
-            var html = "<div class='item' id='myOwnCamera'><div>" + name + "</div><div id='opentok_publisher'></div></div>";
-            $("#myCamera").before(html);
+            var html = "<div id='opentok_publisher'></div>";
+            $("#myOwnCamera").html(html);
 
             var publisherProps = {
-                name: $("#name").val()
+                name: name
             };
-            publisher = session.publish('opentok_publisher', publisherProps); 	// Pass the replacement div id to the publish method
+            // Pass the replacement div id to the publish method
+            publisher = session.publish('opentok_publisher', publisherProps);
             show('unpublishLink');
             hide('publishLink');
         }
@@ -57,6 +72,7 @@
         show('publishLink');
         hide('unpublishLink');
     }
+    <%- end -%>
 
     //--------------------------------------
     //  OPENTOK EVENT HANDLERS
@@ -68,11 +84,17 @@
             addStream(event.streams[i]);
         }
         // Now possible to start publishing
-        document.getElementById('status').innerHTML = 'You can start publishing.';
+        <%- if @broadcaster -%>
+            document.getElementById('status').innerHTML = 'You can start publishing.';
+        <%- else -%>
+            document.getElementById('status').innerHTML = 'Connected.';
+        <%- end -%>
 
         show('disconnectLink');
-        show('publishLink');
-        hide('connectLink');
+        <%- if @broadcaster -%>
+            show('publishLink');
+            hide('connectLink');
+        <%- end -%>
     }
 
     function streamCreatedHandler(event) {
@@ -85,6 +107,7 @@
     function streamDestroyedHandler(event) {
         // This signals that a stream was destroyed. Any Subscribers will automatically be removed.
         // This default behaviour can be prevented using event.preventDefault()
+        alert(1);
     }
 
     function sessionDisconnectedHandler(event) {
@@ -94,8 +117,6 @@
 
         show('connectLink');
         hide('disconnectLink');
-        hide('publishLink');
-        hide('unpublishLink');
     }
 
     function connectionDestroyedHandler(event) {
@@ -128,26 +149,31 @@
             return;
         }
         var divId = stream.streamId;	// Give the replacement div the id of the stream as its id
-        var html = "<div class='item'><div>" + stream.name + "</div><div id='" + divId + "'></div></div>";
-        $("#myCamera").append(html);
+        var html = "<div class='item'><div class='name'>" + stream.name + "</div><div id='" + divId + "'></div></div>";
+        $("#myCameras").append(html);
         subscribers[stream.streamId] = session.subscribe(stream, divId);
     }
 
     function show(id) {
-        $("#"+id).show();
+        $("#" + id).show();
     }
 
     function hide(id) {
-        $("#"+id).hide();
+        $("#" + id).hide();
     }
-
 
 
 </script>
 <div id="links">
-  <div id="status" class="smalltype">Connecting...</div>
-  <a href="#" onclick="javascript:publish()" id="publishLink">Publish</a>
-  <a href="#" onclick="javascript:unpublish()" id="unpublishLink">Unpublish</a>
+  <a href="#" onclick="javascript:connect()" id="connectLink" style="display:none;">Connect</a>
+  <a href="#" onclick="javascript:disconnect()" id="disconnectLink" style="display:none;">Disconnect</a>
+  <%- if @broadcaster -%>
+      <a href="#" onclick="javascript:publish()" id="publishLink" style="display:none;">Publish</a>
+      <a href="#" onclick="javascript:unpublish()" id="unpublishLink" style="display:none;">Unpublish</a>
+<%- end -%>
+  <div id="status" class="smalltype"><span style="text-decoration: blink;">Connecting...</span></div>
+  <div class="clear"></div>
 </div>
-<div id="myCamera" class="publisherContainer">
+<div id="myCameras">
+  
 </div>

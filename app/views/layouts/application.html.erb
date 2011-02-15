@@ -6,43 +6,21 @@
   <%= javascript_include_tag 'jquery-1.4.3.min', 'rails', 'jquery-ui-1.8.4.custom.min', 'application' %>
   <script src="http://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
   <%= csrf_meta_tag %>
-  <style type="text/css">
-      #chat-rooms {
-          width : 100%;
-      }
-
-      #menu {
-          width  : 300px;
-          float  : left;
-          border : 1px solid black;
-      }
-
-      #content {
-          padding-left : 320px;
-      }
-
-      .item {
-          float: left;
-      }
-      #myOwnCamera {
-          float : left;
-          border: 2px solid magenta !important;
-      }
-      #myCamera object {
-          border: 2px solid transparent;
-      }
-  </style>
 </head>
 <body>
 
 <div id="chat-rooms">
-  Name: <%= text_field_tag :name %><br/><br/>
   <div id="menu">
     <%= yield %>
   </div>
-  <div id="content">
-    Video chat room
+  <div id="myName">
+    Name: <%= text_field_tag :name %>
   </div>
+  <div id="myOwnCamera"></div>
 </div>
+
+<div id="content">
+</div>
+
 </body>
 </html>

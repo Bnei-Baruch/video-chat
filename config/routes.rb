@@ -4,7 +4,16 @@ VideoChat::Application.routes.draw do
     resources :sessions, :controller => :open_tok_session
   end
 
-  resources :client
+  resources :client do
+    member do
+      get :broadcaster_show
+      get :guest_show
+    end
+    collection do
+      get :broadcaster
+      get :guest
+    end
+  end
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
