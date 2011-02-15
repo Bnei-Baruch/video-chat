@@ -33,11 +33,13 @@
     //  LINK CLICK HANDLERS
     //--------------------------------------
     function connect() {
+        $('#status').html('<span style="text-decoration: blink;">Connecting...</span>');
         session.connect(apiKey, token);
     }
 
     function disconnect() {
         session.disconnect();
+        $('#status').html('Disconnected.');
         show('connectLink');
         hide('disconnectLink');
         <%- if @broadcaster -%>
@@ -85,9 +87,9 @@
         }
         // Now possible to start publishing
         <%- if @broadcaster -%>
-            document.getElementById('status').innerHTML = 'You can start publishing.';
+            $('#status').html('You can start publishing.');
         <%- else -%>
-            document.getElementById('status').innerHTML = 'Connected.';
+            $('#status').html('Connected.');
         <%- end -%>
 
         show('disconnectLink');
@@ -107,7 +109,12 @@
     function streamDestroyedHandler(event) {
         // This signals that a stream was destroyed. Any Subscribers will automatically be removed.
         // This default behaviour can be prevented using event.preventDefault()
-        alert(1);
+        for (var i = 0; i < event.streams.length; i++) {
+            var id = event.streams[i].streamId;
+            $(".item").filter(function(index){
+                return $(this).attr('data-id') == id;
+            }).hide();
+        }
     }
 
     function sessionDisconnectedHandler(event) {
@@ -149,8 +156,8 @@
             return;
         }
         var divId = stream.streamId;	// Give the replacement div the id of the stream as its id
-        var html = "<div class='item'><div class='name'>" + stream.name + "</div><div id='" + divId + "'></div></div>";
-        $("#myCameras").append(html);
+        var html = "<div class='item' data-id='" + divId + "'><div class='name'>" + stream.name + "</div><div id='" + divId + "'></div></div>";
+        var new_item = $("#myCameras").append(html);
         subscribers[stream.streamId] = session.subscribe(stream, divId);
     }
 
