@@ -4,11 +4,11 @@
   <title>VideoChat</title>
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag 'jquery-1.4.3.min', 'rails', 'jquery-ui-1.8.4.custom.min', 'application' %>
-  <%- if Rails.env.development? %>
+  <%- #if Rails.env.development? %>
   <script src="http://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
-      <%- else %>
-  <script src="http://static.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
-      <%- end %>
+      <%- #else %>
+  <!--script src="http://static.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script-->
+      <%- #end %>
   <%= csrf_meta_tag %>
 </head>
 <body>
