@@ -13,6 +13,7 @@ class ClientController < ApplicationController
     all_sessions
   end
 
+  # Show me in specific session
   def broadcaster_show
     show_session true
   end
@@ -21,13 +22,13 @@ class ClientController < ApplicationController
     show_session
   end
 
-  # Show me in specific session
   def show
     show_session
   end
 
   private
   def all_sessions(broadcaster = false)
+    @broadcaster = broadcaster
     @sessions = OpenTokSession.all
     @path = broadcaster ? :broadcaster_show_client_path : :guest_show_client_path
     render :index
