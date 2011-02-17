@@ -84,6 +84,7 @@
     border      : 1px solid black;
     margin-left : 300px;
     margin-top  : 20px;
+    clear       : both;
 }
 
 #chat #message {
