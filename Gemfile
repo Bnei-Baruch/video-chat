@@ -6,6 +6,9 @@ gem 'heroku'
 gem 'json'
 gem 'json_pure'
 
+# extension for  arel where
+gem "meta_where"
+
 group :development do
 	gem 'ruby-debug'
   gem 'ruby-debug-base'
