@@ -40,36 +40,61 @@
 #chat-room {
     padding-left : 300px;
 }
-#chat-room .h2{
-    font-size: 20px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-#chat-room .description{
-    margin:0 15px 10px;
-}
-#chat-room #links {
-    border: 1px solid black;
-    height: 1.5em;
-    padding: 0 10px;
-}
-#links a{
-    float:left;
-    margin-right: 10px;
-}
-#links #status{
-    float:right;
-    font-weight: bold;
+
+#chat-room .h2 {
+    font-size   : 20px;
+    font-weight : bold;
+    margin      : 10px 0;
 }
 
-#myCameras .item{
-    float: left;
-    margin-right: 2px;
+#chat-room .description {
+    margin : 0 15px 10px;
 }
-.item .name{
-    height:1.4em;
+
+#chat-room #links {
+    border  : 1px solid black;
+    height  : 1.5em;
+    padding : 0 10px;
+}
+
+#links a {
+    float        : left;
+    margin-right : 10px;
+}
+
+#links #status {
+    float       : right;
+    font-weight : bold;
+}
+
+#myCameras .item {
+    float        : left;
+    margin-right : 2px;
+}
+
+.item .name {
+    height : 1.4em;
 }
 
 .clear {
-    clear: both;
+    clear : both;
+}
+
+#chat {
+    border      : 1px solid black;
+    margin-left : 300px;
+    margin-top  : 20px;
+}
+
+#chat #message {
+    border-bottom : 1px solid black;
+    padding       : 10px;
+}
+
+#chat .msg {
+    border-bottom : 1px dotted black;
+}
+
+#chat .date, #chat .name, #chat .msg {
+    padding : 0 10px;
 }

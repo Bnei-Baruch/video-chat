@@ -4,6 +4,7 @@ VideoChat::Application.routes.draw do
     resources :sessions, :controller => :open_tok_session
   end
 
+  resources :chat
   resources :client do
     member do
       get :broadcaster_show
