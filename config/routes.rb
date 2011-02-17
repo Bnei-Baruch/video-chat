@@ -1,7 +1,11 @@
 VideoChat::Application.routes.draw do
 
   namespace :admin do
-    resources :sessions, :controller => :open_tok_session
+    resources :sessions, :controller => :open_tok_session do
+      member do
+        get :chat_cleanup
+      end
+    end
   end
 
   resources :chat

@@ -52,4 +52,9 @@ class Admin::OpenTokSessionController < ApplicationController
     end
     redirect_to :action => :index
   end
+
+  def chat_cleanup
+    Chat.cleanup(params[:id])
+    redirect_to :action => :index
+  end
 end
