@@ -22,12 +22,18 @@ var interval = 0;
 
 function update_chat() {
     if (chat_room_id == 0) return;
-    
+
     $.getJSON('/chat/' + chat_room_id + '?start=' + last_read_message_id + '&chat_room=' + chat_room_id, function(data) {
         $.each(data, function(key, val) {
             last_read_message_id = val.chat.id;
-            var date = Date(Date.parse(val.chat.created_at))
-            $('#chat').append("<div class='name'>" + val.chat.name + "</div><div class='date'>" + date + "</div>");
+            var currentTime = new Date(Date.parse(val.chat.created_at));
+            var hours = currentTime.getHours();
+            var minutes = currentTime.getMinutes();
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+
+            $('#chat').append("<div class='name'>" + val.chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
             $('#chat').append("<div class='msg'>" + val.chat.message + "</div>");
         });
     });

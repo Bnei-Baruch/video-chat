@@ -1,3 +1,7 @@
+body{
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
 #chat-rooms {
     float      : left;
     width      : 264px;
@@ -94,8 +98,16 @@
 
 #chat .msg {
     border-bottom : 1px dotted black;
+    font-size: 13px;
+    clear:both;
 }
 
 #chat .date, #chat .name, #chat .msg {
     padding : 0 10px;
 }
+
+#chat .date, #chat .name {
+    float     : left;
+    font-size : 12px;
+}
+
