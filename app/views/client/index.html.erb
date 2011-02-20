@@ -1,6 +1,22 @@
-<div class="h2">Please select room</div>
-<ul>
-  <%- @sessions.each do |sess| %>
-      <li><%= link_to sess.session_title, send(@path, sess), :remote => true %></li>
-  <%- end %>
-</ul>
+<%= form_tag(@path, :method => :get, :remote => true) do -%>
+    <%= label_tag :name, 'Enter your name: ' %>
+    <%= text_field_tag :name %>
+    <br/>
+    <br/>
+    <label for="room">Please select room: </label>
+    <ul id="room">
+      <%- @sessions.each do |sess| %>
+          <li>
+            <%= radio_button_tag :room, sess.id %>
+            <%= label_tag "room_#{sess.id}", sess.session_title %>
+            <div><%= sess.description %></div>
+          </li>
+      <%- end %>
+    </ul>
+    <br/>
+    <br/>
+    <div><%= submit_tag 'Join room' %></div>
+       
+<% end -%>
+<br/>
+

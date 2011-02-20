@@ -1,2 +1,13 @@
-startChat("<%= @session.id %>");
-$("#content").html("<%= escape_javascript(render(:partial => 'show.html.erb'))%>");
+var apiKey = <%= @api_key %>;
+        var sessionId = '<%= @session.session_id %>';
+        var token = '<%= @token %>';
+
+        $.unblockUI();
+        $("#current-room").html("<div>Room name: <%= @session.session_title%></div>" +
+                "<img id='logo' src='/images/logo.png' alt=''>" +
+                "<img id='triangle' src='/images/triangle.png' alt='' onclick='show_menu();'");
+        start_session();
+        startChat("<%= @session.id %>");
+        $("#myName").html("<%= escape_javascript(@name) %>");
+        $("#chat-input").html("<%= escape_javascript(render(:partial => 'chat_input.html.erb'))%>");
+//        $("#content").html("<%= escape_javascript(render(:partial => 'show.html.erb'))%>");

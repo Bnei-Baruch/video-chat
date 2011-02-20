@@ -1,4 +1,5 @@
 class ClientController < ApplicationController
+  layout 'session'
 
   # List of sessions
   def index
@@ -30,13 +31,23 @@ class ClientController < ApplicationController
   def all_sessions(broadcaster = false)
     @broadcaster = broadcaster
     @sessions = OpenTokSession.all
-    @path = broadcaster ? :broadcaster_show_client_path : :guest_show_client_path
+    @path = broadcaster ? :broadcaster_show_client_index : :guest_show_client_index
     render :index
   end
 
   def show_session(broadcaster = false)
+    if params[:name].nil? || params[:name].empty?
+      render :js => 'alert("Please enter your Name");'
+      return
+    end
+    if params[:room].nil? || params[:room].empty?
+      render :js => 'alert("Please select Room");'
+      return
+    end
     @broadcaster = broadcaster
-    @session, @token, @api_key = OpenTokSession.generate_token(params[:id])
+    @session, @token, @api_key = OpenTokSession.generate_token(params[:room])
+    @name = params[:name]
+    @chat = Chat.new(:room => @session.id, :name => @name)
     render :show
   end
 end

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+  <title>VideoChat</title>
+  <%= stylesheet_link_tag 'reset', 'style' %>
+  <%= javascript_include_tag 'jquery-1.4.3.min', 'rails', 'jquery-ui.min',
+                             'jquery.blockUI', 'application' %>
+  <%- if Rails.env.development? %>
+      <script src="http://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+  <%- else %>
+      <script src="http://static.opentok.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script>
+  <%- end %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+
+<div id="menu" style="display: none; cursor: default; text-align: left;">
+  <%= yield %>
+</div>
+
+<%- # Videos of others        %>
+<div class="videozone">
+  <%- # Title of room        %>
+  <div id="current-room">
+    No room is selected
+  </div>
+
+  <ul class="videowrapper"></ul>
+</div>
+
+<div id="private-area">
+  <div id="name-and-publisher">
+    <div id="myName"></div>
+    <%- if @broadcaster %>
+        <div id="myOwnCamera"></div>
+    <%- end %>
+  </div>
+  <div id="members-list">
+    <div id="members-on">11 Members</div>
+    <ul id="members">
+      <li>Gregory Shilin</li>
+      <li>Rami Grossman</li>
+    </ul>
+  </div>
+  <div id="chat-room">
+    <div id="buttons">
+      <a href="javascript:connect()" id="connectLink" style="display:none;">Connect to Room</a>
+      <a href="javascript:disconnect()" id="disconnectLink" style="display:none;">Leave Room</a>
+      <%- if @broadcaster -%>
+          <a href="javascript:publish()" id="publishLink" style="display:none;">Start Broadcast</a>
+          <a href="javascript:unpublish()" id="unpublishLink" style="display:none;">Stop Broadcast</a>
+      <%- end -%>
+    </div>
+    <div id="chat"></div>
+    <div id="chat-input">
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+<div id="status" class="smalltype">Disconnected</div>
+<%= render :partial => 'regular' %>
+</body>
+</html>

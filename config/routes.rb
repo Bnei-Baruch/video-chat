@@ -8,13 +8,11 @@ VideoChat::Application.routes.draw do
     end
   end
 
-  resources :chat
+  resources :chats
   resources :client do
-    member do
+    collection do
       get :broadcaster_show
       get :guest_show
-    end
-    collection do
       get :broadcaster
       get :guest
     end

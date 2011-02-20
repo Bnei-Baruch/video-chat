@@ -1,34 +1,33 @@
 <script type="text/javascript" charset="utf-8">
-    var apiKey = <%= @api_key %>;
-    var sessionId = '<%= @session.session_id %>';
-    var token = '<%= @token %>';
 
     var session;
     var publisher;
+
     var subscribers = {};
 
-    // Un-comment either of the following to set automatic logging and exception handling.
-    // See the exceptionHandler() method below.
-    // TB.setLogLevel(TB.DEBUG);
-    // TB.addEventListener("exception", exceptionHandler);
+    function start_session() {
+        // Un-comment either of the following to set automatic logging and exception handling.
+        // See the exceptionHandler() method below.
+        TB.setLogLevel(TB.DEBUG);
+        TB.addEventListener("exception", exceptionHandler);
 
-    if (TB.checkSystemRequirements() != TB.HAS_REQUIREMENTS) {
-        alert('Minimum System Requirements not met!');
-    } else {
-        session = TB.initSession(sessionId);	// Initialize session
+        if (TB.checkSystemRequirements() != TB.HAS_REQUIREMENTS) {
+            alert('Minimum System Requirements not met!');
+        } else {
+            session = TB.initSession(sessionId);	// Initialize session
 
-        // Add event listeners to the session
-        session.addEventListener('sessionConnected', sessionConnectedHandler);
-        session.addEventListener('sessionDisconnected', sessionDisconnectedHandler);
-        session.addEventListener('connectionCreated', connectionCreatedHandler);
-        session.addEventListener('connectionDestroyed', connectionDestroyedHandler);
-        session.addEventListener('streamCreated', streamCreatedHandler);
-        session.addEventListener('streamDestroyed', streamDestroyedHandler);
+            // Add event listeners to the session
+            session.addEventListener('sessionConnected', sessionConnectedHandler);
+            session.addEventListener('sessionDisconnected', sessionDisconnectedHandler);
+            session.addEventListener('connectionCreated', connectionCreatedHandler);
+            session.addEventListener('connectionDestroyed', connectionDestroyedHandler);
+            session.addEventListener('streamCreated', streamCreatedHandler);
+            session.addEventListener('streamDestroyed', streamDestroyedHandler);
 
-        // Connect to the session
-        session.connect(apiKey, token);
+            // Connect to the session
+            connect();
+        }
     }
-
     //--------------------------------------
     //  LINK CLICK HANDLERS
     //--------------------------------------
@@ -42,12 +41,12 @@
         $('#status').html('Disconnected.');
         show('connectLink');
         hide('disconnectLink');
-        <%- if @broadcaster -%>
-            hide('publishLink');
-            hide('unpublishLink');
-        <%- end -%>
+    <%- if @broadcaster -%>
+        hide('publishLink');
+        hide('unpublishLink');
+    <%- end -%>
     }
-    
+
     <%- if @broadcaster -%>
     function publish() {
         if (!publisher) {
@@ -56,7 +55,9 @@
             $("#myOwnCamera").html(html);
 
             var publisherProps = {
-                name: name
+                name: name,
+                width: PUBLISHER_WIDTH,
+                height: PUBLISHER_HEIGHT
             };
             // Pass the replacement div id to the publish method
             publisher = session.publish('opentok_publisher', publisherProps);
@@ -82,21 +83,23 @@
 
     function sessionConnectedHandler(event) {
         // Subscribe to all streams currently in the Session
+
         for (var i = 0; i < event.streams.length; i++) {
             addStream(event.streams[i]);
         }
-        // Now possible to start publishing
-        <%- if @broadcaster -%>
-            $('#status').html('You can start publishing.');
-        <%- else -%>
-            $('#status').html('Connected.');
-        <%- end -%>
 
+        // Now possible to start publishing
+    <%- if @broadcaster -%>
+        $('#status').html('You can start publishing.');
+    <%- else -%>
+        $('#status').html('Connected.');
+    <%- end -%>
         show('disconnectLink');
-        <%- if @broadcaster -%>
-            show('publishLink');
-            hide('connectLink');
-        <%- end -%>
+
+    <%- if @broadcaster -%>
+        show('publishLink');
+        hide('connectLink');
+    <%- end -%>
     }
 
     function streamCreatedHandler(event) {
@@ -111,9 +114,10 @@
         // This default behaviour can be prevented using event.preventDefault()
         for (var i = 0; i < event.streams.length; i++) {
             var id = event.streams[i].streamId;
-            $(".item").filter(function(index){
-                return $(this).attr('data-id') == id;
-            }).hide();
+            $(".item").filter(
+                             function(index) {
+                                 return $(this).attr('data-id') == id;
+                             }).hide();
         }
     }
 
@@ -156,9 +160,13 @@
             return;
         }
         var divId = stream.streamId;	// Give the replacement div the id of the stream as its id
-        var html = "<div class='item' data-id='" + divId + "'><div class='name'>" + stream.name + "</div><div id='" + divId + "'></div></div>";
-        var new_item = $("#myCameras").append(html);
-        subscribers[stream.streamId] = session.subscribe(stream, divId);
+        var html = "<li class='videocontainer' data-id='" + divId + "'><div id='" + divId + "'></div></li>";
+        var new_item = $(".videowrapper").append(html);
+        var props = {
+            width: video_width,
+            height: video_height
+        };
+        subscribers[stream.streamId] = session.subscribe(stream, divId, props);
     }
 
     function show(id) {
@@ -168,19 +176,4 @@
     function hide(id) {
         $("#" + id).hide();
     }
-
-
 </script>
-<div id="links">
-  <a href="#" onclick="javascript:connect()" id="connectLink" style="display:none;">Connect</a>
-  <a href="#" onclick="javascript:disconnect()" id="disconnectLink" style="display:none;">Disconnect</a>
-  <%- if @broadcaster -%>
-      <a href="#" onclick="javascript:publish()" id="publishLink" style="display:none;">Publish</a>
-      <a href="#" onclick="javascript:unpublish()" id="unpublishLink" style="display:none;">Unpublish</a>
-<%- end -%>
-  <div id="status" class="smalltype"><span style="text-decoration: blink;">Connecting...</span></div>
-  <div class="clear"></div>
-</div>
-<div id="myCameras">
-  
-</div>

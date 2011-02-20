@@ -1,4 +1,4 @@
-class ChatController < ApplicationController
+class ChatsController < ApplicationController
   def show
     start_from = params[:start] || 0
     room = params[:chat_room] || params[:id]

@@ -1,0 +1,6 @@
+<%= form_for @chat, :remote => true do |f| %>
+    <%= f.hidden_field :room %>
+    <%= f.hidden_field :name %>
+    <%= f.text_area :message, :cols => 50, :rows => 1 %>
+    <%= f.submit :'Post message' %>
+<% end %>
