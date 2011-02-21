@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
   <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
   <title>VideoChat</title>
-  <%= stylesheet_link_tag 'reset', 'style' %>
+  <%= stylesheet_link_tag 'reset', 'style', 'css3buttons' %>
   <%= javascript_include_tag 'jquery-1.4.3.min', 'rails', 'jquery-ui.min',
                              'jquery.blockUI', 'application' %>
   <%- if Rails.env.development? %>
@@ -20,13 +20,17 @@
   <%= yield %>
 </div>
 
-<%- # Videos of others        %>
-<div class="videozone">
-  <%- # Title of room        %>
-  <div id="current-room">
-    No room is selected
+<%- # Title of room          %>
+<div class="header">
+  <div class="dropdown">
+    <img id='logo' src='/images/logo.png' alt=''>
+    <span id='room-name'>No room selected</span>
+    <img id='triangle' src='/images/triangle.png' alt='' onclick='show_menu();'
   </div>
+</div>
 
+<%- # Videos of others          %>
+<div class="videos">
   <ul class="videowrapper"></ul>
 </div>
 
@@ -46,20 +50,19 @@
   </div>
   <div id="chat-room">
     <div id="buttons">
-      <a href="javascript:connect()" id="connectLink" style="display:none;">Connect to Room</a>
-      <a href="javascript:disconnect()" id="disconnectLink" style="display:none;">Leave Room</a>
+      <a href="javascript:connect()" id="connectLink" class="button pill" style="display:none;">Connect to Room</a>
+      <a href="javascript:disconnect()" id="disconnectLink" class="button pill negative" style="display:none;">Leave Room</a>
       <%- if @broadcaster -%>
-          <a href="javascript:publish()" id="publishLink" style="display:none;">Start Broadcast</a>
-          <a href="javascript:unpublish()" id="unpublishLink" style="display:none;">Stop Broadcast</a>
+          <a href="javascript:publish()" id="publishLink" class="button pill" style="display:none;">Start Broadcast</a>
+          <a href="javascript:unpublish()" id="unpublishLink" class="button pill negative" style="display:none;">Stop Broadcast</a>
       <%- end -%>
     </div>
     <div id="chat"></div>
     <div id="chat-input">
     </div>
   </div>
-  <div class="clear"></div>
+  <div class="clear" id="status" class="smalltype">Disconnected</div>
 </div>
-<div id="status" class="smalltype">Disconnected</div>
 <%= render :partial => 'regular' %>
 </body>
 </html>

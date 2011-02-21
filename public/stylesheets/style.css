@@ -1,9 +1,15 @@
+html {
+    background: url(/images/bg.png);
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
-    background-color: #b3b3b3;
+    background: url(/images/gradient.png) repeat-x;
 }
-
+a.button{
+    padding:4px 10px !important;
+}
 .additem {
     position: fixed;
     width: 40px;
@@ -15,65 +21,75 @@ body {
     text-align: center;
 }
 
-.videozone {
-    height: 600px;
-    background: #888;
+.videos {
+    padding: 50px 0 230px;
 }
 
 .videowrapper {
     width: 80%;
-    background: #777;
     margin: 0 auto;
     text-align: center;
 }
 
 .videocontainer {
-    /*	width:20%;
-    */
-    display: inline /*	float:left;*/
-/*	margin:0;*/
-/*	padding:0;*/
+    display: inline;
 }
 
 .videocontainer object {
-    padding: 5px; /*	height:90px;*/
-    display: inline-block; /*	overflow:hidden;*/
+    padding: 5px;
+    display: inline-block;
 }
 
-#current-room {
-    color: white;
-    background-color: #b3b3b3;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
-    margin: 0 auto;
-    padding: 5px 10px 10px;
-    width: 25%;
-    position: relative;
-    -moz-border-radius-bottomleft: 10px;
-    -moz-border-radius-bottomright: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    min-height: 30px;
+.header, #private-area {
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
-#current-room #triangle {
-    bottom: 10px;
-    position: absolute;
-    right: 10px;
-}
-
-#current-room div {
-    margin-left: 50px;
-}
-
-#current-room #logo {
-    position: absolute;
-    left: 10px;
-    top: 5px;
+.header {
+    text-align: center;
 }
 
 #private-area {
-    margin: 25px 10px;
+    height: 280px;
+    top: auto;
+    bottom: 0;
+    border-top: 1px solid #d9d9d9;
+    background: #b2b2b2;
+    -webkit-box-shadow: #333 0 -1px 0;
+    -moz-box-shadow: #333 0 -1px 0;
+    box-shadow: #333 0 -1px 0;
+    behavior: url(/PIE.htc);
+    margin: 10px 0 0;
+}
+
+.dropdown {
+    position: relative;
+    margin: -10px auto 0;
+    padding: 10px 0 0;
+    width: 940px;
+    background: #b2b2b2;
+    height: 50px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: #222 0 2px 2px;
+    -moz-box-shadow: #222 0 2px 2px;
+    box-shadow: #222 0 2px 2px;
+    behavior: url(/PIE.htc);
+}
+
+#logo {
+    vertical-align: middle;
+    padding: 10px 10px 0 0;
+}
+
+#triangle {
+    bottom: 10px;
+    position: absolute;
+    right: 20px;
 }
 
 #name-and-publisher {
@@ -96,28 +112,34 @@ body {
     float: left;
     width: 60%;
 }
-#chat{
-    height:153px;
-    background:white;
-    width:100%;
+
+#chat {
+    height: 153px;
+    background: white;
+    width: 100%;
     overflow: auto;
     padding: 10px 10px 0;
 }
-#chat .name{
-    clear:left;
+
+#chat .name {
+    clear: left;
 }
-#chat .name, #chat .date{
+
+#chat .name, #chat .date {
     float: left;
     color: gray;
 }
-#chat .msg{
+
+#chat .msg {
     margin-bottom: 10px;
-    padding-left:10px;
-    float:left;
+    padding-left: 10px;
+    float: left;
 }
-#chat_message{
-    width:80%;
+
+#chat_message {
+    width: 80%;
 }
+
 #myName, #members-no, #buttons {
     height: 30px;
 }
@@ -131,25 +153,10 @@ body {
 #buttons {
     text-align: right;
 }
-
-#buttons a {
-    border: 1px solid black;
-    -moz-border-radius: 8px 8px 8px 8px;
-    border-radius: 8px 8px 8px 8px;
-    color: black;
-    font-weight: bold;
-    padding: 3px;
-    text-decoration: none;
-    background-color: white;
-    box-shadow: 1px 1px 2px;
-    -moz-box-shadow: 1px 1px 2px;
-    -webkit-box-shadow: 1px 1px 2px;
-}
-
 #status {
     border: 1px solid;
     clear: both;
-    margin: 10px;
+    margin: 10px 20px 10px 0;
     padding: 10px;
 }
 

@@ -15,7 +15,10 @@
     </ul>
     <br/>
     <br/>
-    <div><%= submit_tag 'Join room' %></div>
+    <div>
+      <%= submit_tag 'Join the Room', :class => 'button pill' %>
+      <%= link_to 'Back', 'javascript:$.unblockUI();', :id => 'cancel-link', :style => 'display: none;', :class => 'button negative pill' %>
+    </div>
        
 <% end -%>
 <br/>
