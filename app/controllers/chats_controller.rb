@@ -2,6 +2,13 @@ class ChatsController < ApplicationController
   def show
     start_from = params[:start] || 0
     room = params[:chat_room] || params[:id]
+    member = Member.find(params[:member_id])
+    if member
+      member.updated_at= DateTime.now
+      member.save!
+    end
+    Member.cleanup
+    
     sql = Chat.where(:room => room).where(:id.gt => start_from)
     if start_from == 0
       # Just 10 last messages
@@ -20,4 +27,9 @@ class ChatsController < ApplicationController
     render :text => ''
   end
 
+  def members
+    # Update list of members in chat
+    session = OpenTokSession.find(params[:id])
+    render :json => session.members.map{|m| "#{m.name} #{m.is_broadcaster ? ' (b)' : ' (g)'}"}.to_json
+  end
 end

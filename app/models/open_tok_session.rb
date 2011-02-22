@@ -8,6 +8,8 @@ class OpenTokSession < ActiveRecord::Base
   validate :session_title, :presence => true, :uniqueness => true, :length => {:minimum => 1}
   validate :location, :presence => true
 
+  has_many :members
+  
   def create_session!
     session = @@api.create_session self.location
     self.session_id = session.session_id

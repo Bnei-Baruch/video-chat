@@ -46,8 +46,11 @@ class ClientController < ApplicationController
     end
     @broadcaster = broadcaster
     @session, @token, @api_key = OpenTokSession.generate_token(params[:room])
-    @name = params[:name]
-    @chat = Chat.new(:room => @session.id, :name => @name)
+    @member = Member.new(:name => params[:name], :is_broadcaster => @broadcaster)
+    @member.open_tok_session = @session
+    @member.save!
+    @chat = Chat.new(:room => @session.id, :name => @member.name)
+    @members = @session.members
     render :show
   end
 end

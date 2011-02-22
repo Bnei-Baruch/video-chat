@@ -1,11 +1,15 @@
 var apiKey = "<%= @api_key %>";
-        var sessionId = '<%= @session.session_id %>';
-        var token = '<%= @token %>';
+var sessionId = '<%= @session.session_id %>';
+var token = '<%= @token %>';
 
-        $.unblockUI();
-        $('#cancel-link').show();
-        $(".dropdown #room-name").html("Room name: <%= @session.session_title%>");
-        start_session();
-        startChat("<%= @session.id %>");
-        $("#myName").html("<%= escape_javascript(@name) %>");
-        $("#chat-input").html("<%= escape_javascript(render(:partial => 'chat_input.html.erb'))%>");
+$.unblockUI();
+$('#cancel-link').show();
+$(".dropdown #room-name").html("Room name: <%= @session.session_title%>");
+$("#members-on").html("<%= @members.length %> members");
+<%-  @members.each do |m| %>
+$("#members").append("<li><%= m.name %> <%= m.is_broadcaster ? '(b)' : '(g)' %></li>");
+<%-  end %>
+start_session();
+startChat("<%= @session.id %>", <%= @member.id %>);
+$("#myName").html("<%= escape_javascript(@member.name) %>");
+$("#chat-input").html("<%= escape_javascript(render(:partial => 'chat_input.html.erb'))%>");
