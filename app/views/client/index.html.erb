@@ -1,25 +1,32 @@
 <%= form_tag(@path, :method => :get, :remote => true) do -%>
-    <%= label_tag :name, 'Enter your name: ' %>
+    <%= label_tag :name, 'Enter your name: ', :class => 'big' %>
     <%= text_field_tag :name %>
     <br/>
     <br/>
-    <label for="room">Please select room: </label>
+    <label for="room" class='big'>Please select room: </label>
+    <br/>
+    <br/>
     <ul id="room">
-      <%- @sessions.each do |sess| %>
-          <li>
+      <%- @sessions.each_with_index do |sess, idx| %>
+          <li
+          <%- if idx == 0 %>
+          class="first"
+          <%- elsif idx == (@sessions.length - 1) %>
+          class="last"
+          <%- end %>
+          >
             <%= radio_button_tag :room, sess.id %>
             <%= label_tag "room_#{sess.id}", sess.session_title %>
-            <div><%= sess.description %></div>
+            <%- if sess.description %>
+                <div class="descr"><%= sess.description %></div>
+            <%- end %>
           </li>
-      <%- end %>
+    <%- end %>
     </ul>
     <br/>
-    <br/>
-    <div>
+    <div class="submit">
       <%= submit_tag 'Join the Room', :class => 'button pill' %>
       <%= link_to 'Back', 'javascript:$.unblockUI();', :id => 'cancel-link', :style => 'display: none;', :class => 'button negative pill' %>
     </div>
-       
 <% end -%>
-<br/>
 

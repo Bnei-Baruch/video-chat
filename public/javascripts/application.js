@@ -1,5 +1,5 @@
-var PUBLISHER_WIDTH = 264;
-var PUBLISHER_HEIGHT = 198;
+var PUBLISHER_WIDTH = 200;
+var PUBLISHER_HEIGHT = 165;
 
 var video_width = 264;
 var video_height = 198;
@@ -13,6 +13,7 @@ $(function() {
 });
 
 function set_video_size() {
+    $('.videos').css('min-height', $(window).height() - 272);
     video_width = $('.videowrapper').width() / 5;
     video_height = video_width * 3 / 4;
     $('.videocontainer object').attr({width:video_width, height:video_height});

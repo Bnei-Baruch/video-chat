@@ -10,12 +10,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110216112207) do
+ActiveRecord::Schema.define(:version => 20110221100841) do
 
   create_table "chats", :force => true do |t|
     t.integer  "room"
     t.text     "message"
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "members", :force => true do |t|
+    t.string   "name"
+    t.boolean  "is_broadcaster"
+    t.integer  "open_tok_session_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

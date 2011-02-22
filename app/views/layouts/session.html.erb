@@ -20,46 +20,52 @@
   <%= yield %>
 </div>
 
-<%- # Title of room          %>
+<%- # Title of room              %>
 <div class="header">
   <div class="dropdown">
-    <img id='logo' src='/images/logo.png' alt=''>
-    <span id='room-name'>No room selected</span>
-    <img id='triangle' src='/images/triangle.png' alt='' onclick='show_menu();' />
+    <!--<img id='logo' src='/images/logo.png' alt=''>-->
+    <span id='room-name'>No room selected</span><br/>
+    <span id="status" class="smalltype">Disconnected</span>
+    <img id='setup' src='/images/setup.png' alt='' onclick='show_menu();'/>
   </div>
 </div>
 
-<%- # Videos of others          %>
+<%- # Videos of others              %>
 <div class="videos">
   <ul class="videowrapper"></ul>
 </div>
 
 <div id="private-area">
-  <div id="name-and-publisher">
-    <div id="myName"></div>
-    <%- if @broadcaster %>
-        <div id="myOwnCamera"></div>
-    <%- end %>
-  </div>
-  <div id="members-list">
-    <div id="members-on">No Members</div>
-    <ul id="members">
-    </ul>
-  </div>
-  <div id="chat-room">
-    <div id="buttons">
-      <a href="javascript:connect()" id="connectLink" class="button pill" style="display:none;">Connect to Room</a>
-      <a href="javascript:disconnect()" id="disconnectLink" class="button pill negative" style="display:none;">Leave Room</a>
-      <%- if @broadcaster -%>
-          <a href="javascript:publish()" id="publishLink" class="button pill" style="display:none;">Start Broadcast</a>
-          <a href="javascript:unpublish()" id="unpublishLink" class="button pill negative" style="display:none;">Stop Broadcast</a>
-      <%- end -%>
+  <div class="private-wrapper">
+    <div id="name-and-publisher">
+      <div id="myName" class="toolbar"></div>
+      <%- if @broadcaster %>
+          <div id="myOwnCamera"></div>
+      <%- end %>
     </div>
-    <div id="chat"></div>
-    <div id="chat-input">
+    <div id="members-list">
+      <div id="members-on" class="toolbar">No Members</div>
+      <ul id="members">
+      </ul>
+    </div>
+    <div id="chat-room">
+      <div id="buttons" class="toolbar">
+        <a href="javascript:connect()" id="connectLink" class="button pill" style="display:none;">Connect to Room</a>
+        <a href="javascript:disconnect()" id="disconnectLink" class="button pill negative" style="display:none;">Leave
+          Room</a>
+        <%- if @broadcaster -%>
+            <a href="javascript:publish()" id="publishLink" class="button pill" style="display:none;">Start
+              Broadcast</a>
+            <a href="javascript:unpublish()" id="unpublishLink" class="button pill negative" style="display:none;">Stop
+              Broadcast</a>
+        <%- end -%>
+      </div>
+      <div class="chat-wrapper">
+        <div id="chat"></div>
+        <div id="chat-input"></div>
+      </div>
     </div>
   </div>
-  <div class="clear" id="status" class="smalltype">Disconnected</div>
 </div>
 <%= render :partial => 'regular' %>
 </body>
