@@ -205,7 +205,7 @@ a.button{
     line-height:1;
 }
 #room{
-    height:300px;
+    max-height:300px;
     overflow:auto;
     background-color:#999;
     padding:8px;
