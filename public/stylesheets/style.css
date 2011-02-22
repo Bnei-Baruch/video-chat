@@ -104,27 +104,27 @@ a.button{
 }
 #name-and-publisher {
     float: left;
-    width: 200px;
+    width: 220px;
 }
 
 #myOwnCamera {
-    height: 200px;
+    height: 220px;
 }
 
 #members-list {
     float: left;
-    width: 200px;
+    width: 160px;
     margin-left: 20px;
 }
 
 #chat_submit{
-    left: 7px;
+    left: 12px;
     position: relative;
     top: -7px;
 }
 #chat-room {
     float: left;
-    width: 460px;
+    width: 520px;
     margin-left:20px;
 }
 

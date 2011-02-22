@@ -1,4 +1,4 @@
-var PUBLISHER_WIDTH = 200;
+var PUBLISHER_WIDTH = 220;
 var PUBLISHER_HEIGHT = 165;
 
 var video_width = 264;
