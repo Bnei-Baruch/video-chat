@@ -3,7 +3,7 @@ class Member < ActiveRecord::Base
 
   def self.cleanup
     # Remove stale members
-    stale_members = Member.where(:updated_at.lt => (DateTime.now - 7.minutes)).all
+    stale_members = Member.where(:updated_at.lt => (DateTime.now - 5.minutes)).all
     stale_members.each{|r| r.destroy} unless stale_members.empty?
   end
 end

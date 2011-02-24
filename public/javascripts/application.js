@@ -60,44 +60,91 @@ $(function() {
 });
 
 var chat_room_id = 0;
-var last_read_message_id = 0;
 var chat_member_id = 0;
 var interval = 0;
 
+function display_chat_message(chat, append) {
+    if (arguments.length == 1)
+        append = true;
+    var currentTime = new Date(Date.parse(chat.created_at));
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+
+    if (append) {
+        $('#chat').append("<div class='name'>" + chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
+        $('#chat').append("<div class='msg'>" + chat.message + "</div>");
+        $('#chat').attr("scrollTop", $("#chat").attr("scrollHeight") - $('#chat').height());
+    } else {
+        $('#chat').prepend("<div class='name'>" + chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
+        $('#chat').prepend("<div class='msg'>" + chat.message + "</div>");
+    }
+}
 function update_chat() {
     if (chat_room_id == 0) return;
-    $.getJSON('/chats/' + chat_room_id + '?start=' + last_read_message_id +
-            '&chat_room=' + chat_room_id + '&member_id=' + chat_member_id,
+    $.getJSON('/chats/' + chat_room_id + '?chat_room=' + chat_room_id + '&member_id=' + chat_member_id,
             function(data) {
                 $.each(data, function(key, val) {
-                    last_read_message_id = val.chat.id;
-                    var currentTime = new Date(Date.parse(val.chat.created_at));
-                    var hours = currentTime.getHours();
-                    var minutes = currentTime.getMinutes();
-                    if (minutes < 10) {
-                        minutes = "0" + minutes;
-                    }
-
-                    $('#chat').append("<div class='name'>" + val.chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
-                    $('#chat').append("<div class='msg'>" + val.chat.message + "</div>");
+                    display_chat_message(val.chat, true);
                 });
             });
-    $.getJSON('/chats/' + chat_room_id + '/members',
-            function(data) {
-                $("#members-on").html(data.length + " members");
-                $("#members").html("");
-                $.each(data, function(key, val){
-                    $("#members").append("<li>" + val + "</li>");
-                });
-            })
+}
+function all_members(members) {
+    total_members = members.length;
+    $("#members-on").html("" + total_members + " " + (total_members == 1 ? "member" : "members"));
+    $("#members").html("");
+    $.each(members, function(idx, member) {
+        add_member(member);
+    });
+    $("#members").attr("scrollTop", $("#members").attr("scrollHeight") - $('#members').height());
+}
+function add_member(member) {
+    user = member.chat_user;
+    actor = user.id == chat_member_id ? ' (you)' : (user.is_broadcaster ? ' (host)' : ' (guest)')
+    $("#members").append("<li id='member-" + user.id + "'>" + user.name +  actor + "</li>");
+    $("#members").attr("scrollTop", $("#members").attr("scrollHeight") - $('#members').height());
+}
+function remove_member(member){
+    user_id = member.chat_user.id;
+    $("#member-" + user_id).remove();
+    $("#members").attr("scrollTop", $("#members").attr("scrollHeight") - $('#members').height());
 }
 
-function startChat(session_id, member_id) {
-    // reset char room
-    clearInterval(interval);
+function startPusherChat(session_id, member_id) {
+    // Enable pusher logging - don't include this in production
+//    Pusher.log = function() {
+//        if (window.console) window.console.log.apply(window.console, arguments);
+//    };
+//
+//    // Flash fallback logging - don't include this in production
+//    WEB_SOCKET_DEBUG = true;
 
-    last_read_message_id = 0;
-    chat_updated_room_id = chat_room_id = session_id;
+    Pusher.channel_auth_endpoint = '/client/authenticate?user_id=' + member_id;
+    var pusher = new Pusher('46ee62dcbfe82eb253a9');
+    var channel = pusher.subscribe('channel-' + session_id);
+    channel.bind('new_message_event', function(data) {
+        display_chat_message(data);
+    });
+
+    var presenceChannel = pusher.subscribe('presence-' + session_id)
+    presenceChannel.bind('pusher:subscription_succeeded', function(members) {
+        all_members(members);
+    });
+    presenceChannel.bind('pusher:member_added', function(member) {
+        add_member(member);
+    });
+    presenceChannel.bind('pusher:member_removed', function(member) {
+        remove_member(member);
+    });
+
+
+    chat_room_id = session_id;
     chat_member_id = member_id;
-    interval = setInterval(update_chat, 5000);
+
+    update_chat();
+//    update_members();
+//
+//    interval = setInterval(update_members, 10000);
 }

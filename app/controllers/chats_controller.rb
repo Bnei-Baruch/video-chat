@@ -1,35 +1,55 @@
+require 'pusher'
+
+if Rails.env == 'Development'
+  Pusher.app_id = '4130'
+  Pusher.key = '36cf16622b9fbe32f9cf'
+  Pusher.secret = '91d45c8f5f79429e44ef'
+else
+  Pusher.app_id = '4132'
+  Pusher.key = '46ee62dcbfe82eb253a9'
+  Pusher.secret = 'a6e1db500dd165c6c925'
+end
+
 class ChatsController < ApplicationController
   def show
-    start_from = params[:start] || 0
     room = params[:chat_room] || params[:id]
-    member = Member.find(params[:member_id])
-    if member
-      member.updated_at= DateTime.now
-      member.save!
-    end
-    Member.cleanup
-    
-    sql = Chat.where(:room => room).where(:id.gt => start_from)
-    if start_from == 0
-      # Just 10 last messages
-      messages = sql.order('created_at DESC').limit(10)
-    else
-      # All messages starting from 'start_from''
-      messages = sql.order('created_at').limit(10)
+
+    # Cleanup members
+    if params[:member_id]
+      member = Member.find(params[:member_id])
+      if member
+        member.updated_at= DateTime.now
+        member.save!
+      end
+      Member.cleanup
     end
 
-    render :text => messages.all.to_json, :status => messages.empty? ? 302 : 200
+    messages = Chat.where(:room => room).order('created_at DESC').limit(10).all.reverse
+
+    render :text => messages.to_json, :status => messages.empty? ? 302 : 200
   end
 
   def create
     chat = Chat.new(params[:chat])
-    chat.save
+    if chat.save
+      Pusher["channel-#{chat.room}"].trigger('new_message_event', chat.attributes)
+    end
+    # Cleanup members
+    if params[:member_id]
+      member = Member.find(params[:member_id])
+      if member
+        member.updated_at= DateTime.now
+        member.save!
+      end
+      Member.cleanup
+    end
+
     render :text => ''
   end
 
   def members
     # Update list of members in chat
     session = OpenTokSession.find(params[:id])
-    render :json => session.members.map{|m| "#{m.name} #{m.is_broadcaster ? ' (b)' : ' (g)'}"}.to_json
+    render :json => session.members.map { |m| "#{m.name} #{m.is_broadcaster ? ' (host)' : ' (guest)'}" }.to_json
   end
 end

@@ -1,6 +1,19 @@
 class ClientController < ApplicationController
   layout 'session'
 
+  def authenticate
+    if params[:user_id]
+      user = Member.find(params[:user_id])
+      auth = Pusher[params[:channel_name]].authenticate(params[:socket_id],
+                                                        :user_id => user.id,
+                                                        :chat_user => user.attributes
+      )
+      render :json => auth
+    else
+      render :text => "Not authorized", :status => '403'
+    end
+  end
+
   # List of sessions
   def index
     all_sessions

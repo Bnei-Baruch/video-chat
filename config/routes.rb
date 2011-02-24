@@ -15,6 +15,7 @@ VideoChat::Application.routes.draw do
   end
   resources :client do
     collection do
+      post :authenticate
       get :broadcaster_show
       get :guest_show
       get :broadcaster
