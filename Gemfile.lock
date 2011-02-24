@@ -32,6 +32,7 @@ GEM
     builder (2.1.2)
     columnize (0.3.2)
     configuration (1.2.0)
+    crack (0.1.8)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     heroku (1.6.3)
@@ -58,6 +59,11 @@ GEM
     pg (0.9.0-x86-mingw32)
     polyglot (0.3.1)
     postgres-pr (0.6.3)
+    pusher (0.6.0)
+      crack
+      json
+      ruby-hmac
+      signature
     rack (1.2.1)
     rack-mount (0.6.13)
       rack (>= 1.0.0)
@@ -86,6 +92,9 @@ GEM
       linecache (>= 0.3)
     ruby-debug-ide (0.4.16)
       rake (>= 0.8.1)
+    ruby-hmac (0.4.0)
+    signature (0.1.2)
+      ruby-hmac
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
@@ -101,6 +110,7 @@ DEPENDENCIES
   meta_where
   pg (= 0.9.0)
   postgres-pr (= 0.6.3)
+  pusher
   rails (= 3.0.4)
   ruby-debug
   ruby-debug-base

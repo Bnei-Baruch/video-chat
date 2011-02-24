@@ -13,4 +13,6 @@ group :development do
 	gem 'ruby-debug'
   gem 'ruby-debug-base'
   gem 'ruby-debug-ide'
+
+  gem 'pusher'
 end
