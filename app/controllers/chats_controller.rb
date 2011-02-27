@@ -11,6 +11,8 @@ else
 end
 
 class ChatsController < ApplicationController
+  include ActionView::Helpers::SanitizeHelper
+  
   def show
     room = params[:chat_room] || params[:id]
 
@@ -31,6 +33,15 @@ class ChatsController < ApplicationController
 
   def create
     chat = Chat.new(params[:chat])
+    message = sanitize chat.message
+
+    if message.empty?
+      render :text => ''
+      return
+    end
+    message = message.gsub(/(http:\/\/\S+|www.\S+)/i, "<a href='\\1' target='_blank'>\\1</a>");
+    chat.message = message
+
     if chat.save
       Pusher["channel-#{chat.room}"].trigger('new_message_event', chat.attributes)
     end

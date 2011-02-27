@@ -49,7 +49,7 @@ $(function() {
     };
     var checkUserName = function() {
         var name = $("#name").val();
-    }
+    };
     $("#menu a")
             .bind("ajax:before", checkUserName)
             .bind("ajax:loading", toggleLoading)
@@ -59,9 +59,7 @@ $(function() {
     //});
 });
 
-var chat_room_id = 0;
 var chat_member_id = 0;
-var interval = 0;
 
 function display_chat_message(chat, append) {
     if (arguments.length == 1)
@@ -82,7 +80,7 @@ function display_chat_message(chat, append) {
         $('#chat').prepend("<div class='msg'>" + chat.message + "</div>");
     }
 }
-function update_chat() {
+function update_chat(chat_room_id) {
     if (chat_room_id == 0) return;
     $.getJSON('/chats/' + chat_room_id + '?chat_room=' + chat_room_id + '&member_id=' + chat_member_id,
             function(data) {
@@ -103,10 +101,10 @@ function all_members(members) {
 function add_member(member) {
     user = member.chat_user;
     actor = user.id == chat_member_id ? ' (you)' : (user.is_broadcaster ? ' (host)' : ' (guest)')
-    $("#members").append("<li id='member-" + user.id + "'>" + user.name +  actor + "</li>");
+    $("#members").append("<li id='member-" + user.id + "'>" + user.name + actor + "</li>");
     $("#members").attr("scrollTop", $("#members").attr("scrollHeight") - $('#members').height());
 }
-function remove_member(member){
+function remove_member(member) {
     user_id = member.chat_user.id;
     $("#member-" + user_id).remove();
     $("#members").attr("scrollTop", $("#members").attr("scrollHeight") - $('#members').height());
@@ -139,12 +137,38 @@ function startPusherChat(session_id, member_id) {
         remove_member(member);
     });
 
-
-    chat_room_id = session_id;
     chat_member_id = member_id;
 
-    update_chat();
-//    update_members();
-//
-//    interval = setInterval(update_members, 10000);
+    update_chat(session_id);
 }
+
+$(function() {
+// Enter key to send message
+    $('#chat_message').live('keydown', function(event) {
+        // Shift + Enter
+        if (event.which == 13 && event.shiftKey) {
+            event.shiftKey = false;
+            $('#chat_message').trigger(event);
+        }
+        else if (event.keyCode == 13) {
+            $('#new_chat').submit();
+            return false;
+        }
+        return true;
+
+    });
+
+    var clearForm = function() {
+        $('#chat_message').val('');
+    };
+    var checkNonempty = function() {
+        return $('#chat_message').val() != '';
+    };
+    $("#new_chat")
+            .live("ajax:before", checkNonempty)
+        //.bind("ajax:loading", toggleLoading)
+            .live("ajax:complete", clearForm)
+    //.bind("ajax:success", function(event, data, status, xhr) {
+    //$("#content").html(data);
+    //});
+});
