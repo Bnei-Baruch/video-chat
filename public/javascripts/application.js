@@ -60,6 +60,9 @@ $(function() {
 });
 
 var chat_member_id = 0;
+try {
+    var snd = new Audio('/sounds/notify.wav');
+} catch(x){}
 
 function display_chat_message(chat, append) {
     if (arguments.length == 1)
@@ -75,6 +78,7 @@ function display_chat_message(chat, append) {
         $('#chat').append("<div class='name'>" + chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
         $('#chat').append("<div class='msg'>" + chat.message + "</div>");
         $('#chat').attr("scrollTop", $("#chat").attr("scrollHeight") - $('#chat').height());
+        if (typeof snd == 'object') snd.play();
     } else {
         $('#chat').prepend("<div class='name'>" + chat.name + "</div><div class='date'>" + hours + ":" + minutes + "</div>");
         $('#chat').prepend("<div class='msg'>" + chat.message + "</div>");
