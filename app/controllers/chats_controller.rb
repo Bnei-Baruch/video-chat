@@ -39,7 +39,8 @@ class ChatsController < ApplicationController
       render :text => ''
       return
     end
-    message = message.gsub(/(http:\/\/\S+|www.\S+)/i, "<a href='\\1' target='_blank'>\\1</a>");
+    message.gsub! /\n/, '<br/>'
+    message.gsub! /(http:\/\/\S+|www.\S+)/i, "<a href='\\1' target='_blank'>\\1</a>"
     chat.message = message
 
     if chat.save
