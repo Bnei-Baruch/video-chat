@@ -40,7 +40,9 @@ class ChatsController < ApplicationController
       return
     end
     message.gsub! /\n/, '<br/>'
-    message.gsub! /(http:\/\/\S+|www.\S+)/i, "<a href='\\1' target='_blank'>\\1</a>"
+    message.gsub! /(http:\/\/\S+)/i, "<a href='\\1' target='_blank'>\\1</a>"
+    message.gsub! /(\/www.\S+)/i, "<a href='\\1' target='_blank'>\\1</a>"
+    message.gsub! /([^\/]www.\S+)/i, "<a href='http://\\1' target='_blank'>\\1</a>"
     chat.message = message
 
     if chat.save
