@@ -3,7 +3,7 @@ table {
     margin: 10px;
 }
 
-td {
+td, th {
     padding: 5px;
 }
 
