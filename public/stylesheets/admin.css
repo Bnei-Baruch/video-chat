@@ -25,6 +25,10 @@ fieldset {
 }
 
 input[type=text], textarea {
-    margin:0 10px 10px;
-    float:right;
+    margin: 0 10px 10px;
+    float: right;
+}
+
+.even {
+    background: #EFEFEF;
 }
