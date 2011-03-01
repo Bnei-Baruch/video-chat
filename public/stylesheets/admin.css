@@ -1,0 +1,17 @@
+table {
+    border: 1px solid black;
+    margin: 10px;
+}
+
+td {
+    padding: 5px;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 10px;
+}
+
+p {
+    margin: 10px;
+}

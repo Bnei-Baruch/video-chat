@@ -9,7 +9,7 @@
   <td><%= session.switch_type == 0 ? 'timeout-based' : 'activity-based' %></td>
   <td><%= session.switch_timeout %> msec</td>
   <td><%= l session.created_at, :format => :timestamp %> </td>
-  <td><%= link_to t("admin.sessions.edit"), edit_admin_session_path(session) %></td>
-  <td><%= link_to t("admin.sessions.clear_chat"), chat_cleanup_admin_session_path(session) %></td>
-  <td><%= link_to t("admin.sessions.delete"), admin_session_path(session), :confirm => t('admin.sessions.are_you_sure'), :method => :delete %> </td>
+  <td><%= link_to t("admin.sessions.edit"), edit_admin_session_path(session), :class => 'button pill' %></td>
+  <td><%= link_to t("admin.sessions.clear_chat"), chat_cleanup_admin_session_path(session), :class => 'button pill negative' %></td>
+  <td><%= link_to t("admin.sessions.delete"), admin_session_path(session), :confirm => t('admin.sessions.are_you_sure'), :method => :delete, :class => 'button pill negative' %> </td>
 </tr>
