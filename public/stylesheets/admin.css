@@ -14,4 +14,17 @@ h1 {
 
 p {
     margin: 10px;
+    clear: both;
+}
+
+fieldset {
+    border: 2px solid gray;
+    float: left;
+    margin: 10px;
+    padding: 10px;
+}
+
+input[type=text], textarea {
+    margin:0 10px 10px;
+    float:right;
 }
