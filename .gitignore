@@ -2,6 +2,6 @@ db/*.sqlite3
 log/*.log
 tmp/
 log/
-.idea
+.idea/
 .bundle/
-secret_token.rb
+config/initializers/secret_token.rb
