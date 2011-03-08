@@ -4,4 +4,3 @@ tmp/
 log/
 .idea/
 .bundle/
-config/initializers/secret_token.rb

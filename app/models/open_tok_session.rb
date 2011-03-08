@@ -1,8 +1,8 @@
 require 'lib/opentok'
 
 class OpenTokSession < ActiveRecord::Base
-  @@api_key    = 277241
-  @@api_secret = "cb11d5cbd9de98fd547861daa13d03e985731454"
+  @@api_key    = ENV['VIDEO_CHAT_API_KEY']
+  @@api_secret = ENV['VIDEO_CHAT_API_SECRET']
   @@api = OpenTok::OpenTokSDK.new @@api_key, @@api_secret
 
   validate :session_title, :presence => true, :uniqueness => true, :length => {:minimum => 1}
